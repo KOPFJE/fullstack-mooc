@@ -8,10 +8,76 @@ const App = () => {
 
   return (
     <div>
-    <h1></h1>
-    <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
-    <p>{neutral}</p>
+      <h1>Give feedback!</h1>
+      <div>
+        <Button handleClick={() => setGood(good + 1)} text="Good" />
+        <Button handleClick={() => setNeutral(neutral + 1)} text="Neutral" />
+        <Button handleClick={() => setBad(bad + 1)} text="Bad" />
+      </div>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
+  );
+}
+
+const Button = (props) => {
+  return(
+    <button onClick={props.handleClick}>{props.text}</button>
+  );
+}
+
+const Statistics = (props) => {
+  let all = props.good + props.neutral + props.bad;
+  let average = (props.good - props.bad) / all;
+  let positive = props.good / all * 100 ;
+  let lineInfos = [
+    {
+      text : "Good",
+      value : props.good
+    },
+    {
+      text : "Neutral",
+      value : props.neutral
+    },
+    {
+      text : "Bad",
+      value : props.bad
+    },
+    {
+      text : "All",
+      value : all
+    },
+    {
+      text : "Average",
+      value : average
+    },
+    {
+      text : "Positive",
+      value : positive + '%'
+    }
+  ];
+
+  if(all > 0) {
+    return(
+      <div>
+        <h1>Statistics</h1>
+        {
+          lineInfos.map(line => <StatisticLine text={line.text} value={line.value} /> )
+        }
+      </div>
+    );
+  } else {
+    return(
+      <div>
+        <h1>Statistics</h1>
+        <p>No feedback given.</p>
+      </div>
+    );
+  }
+}
+
+const StatisticLine = (props) => {
+  return(
+    <p>{props.text}: {props.value}</p>
   );
 }
 
