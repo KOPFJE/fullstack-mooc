@@ -48,11 +48,11 @@ const Statistics = (props) => {
     },
     {
       text : "Average",
-      value : average
+      value : average.toFixed(1)
     },
     {
       text : "Positive",
-      value : positive + '%'
+      value : positive.toFixed(1) + '%'
     }
   ];
 
@@ -60,9 +60,11 @@ const Statistics = (props) => {
     return(
       <div>
         <h1>Statistics</h1>
-        {
-          lineInfos.map(line => <StatisticLine text={line.text} value={line.value} /> )
-        }
+        <table>
+          {
+            lineInfos.map(line => <StatisticLine key={line.text} text={line.text} value={line.value} /> )
+          }
+        </table>
       </div>
     );
   } else {
@@ -77,7 +79,12 @@ const Statistics = (props) => {
 
 const StatisticLine = (props) => {
   return(
-    <p>{props.text}: {props.value}</p>
+    <tbody>
+    <tr>
+      <td>{props.text}</td> 
+      <td>{props.value}</td>
+    </tr>
+    </tbody>
   );
 }
 
