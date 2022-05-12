@@ -1,10 +1,9 @@
 import React from 'react';
 
 const Total = (props) => {
-    let sum = 0;
-    for (let part of props.parts) {
-       sum += part.exercises; 
-    }
+    //let sum = 0;
+    let initialValue = 0;
+    let sum = props.parts.reduce((pValue, cValue) => pValue + cValue.exercises, initialValue);
     console.log(sum);
 
     return (
