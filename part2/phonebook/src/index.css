@@ -1,5 +1,5 @@
 body {
-  margin: 10px;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,21 +10,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-.error, .confirmation {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 5px;
-}
-
-.confirmation {
-  border: 2px solid greenyellow;
-}
-
-.error {
-  border: 2px solid red;
-}
-
-.none {
-  display: none;
 }
