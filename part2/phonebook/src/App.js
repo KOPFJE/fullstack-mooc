@@ -1,67 +1,101 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/Filter';
 import Persons from './components/Persons';
 import AddNewPerson from './components/AddNewPerson';
+import NotificationMessage from './components/NotificationMessage';
+import routes from './server/Routes';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { 
-      name: 'Arto Hellas',
-      phoneNumber : '040-1231244'
-    },
-    { 
-      name: 'Ada Lovelace',
-      phoneNumber : '39-44-5323523'
-    },
-    { 
-      name: 'Dan Abramov',
-      phoneNumber : '12-43-234345'
-    },
-    { 
-      name: 'Mary Poppendieck',
-      phoneNumber : '39-23-6423122'
-    }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewPhoneNumber] = useState('');
   const [searchName, setSearchName] = useState('')
-  
+  const [message, setMessage] = useState({ type: "none", text : "" })
+
+  useEffect( () => {
+    const fetchPersons = async () => {
+      let newPersons = await routes.getPersons();
+      setPersons(newPersons);
+    }
+    fetchPersons();
+  }, [newName, message]);
+
   const handleNameChange = (e) => {
     e.preventDefault();
     setNewName(e.target.value);
-  }
+  };
 
   const handlePhoneNumberChange = (e) => {
     e.preventDefault();
     setNewPhoneNumber(e.target.value);
-  }
+  };
 
-  const handleSubmit = (e) => {
+  const handleDelete = async (person) => {
+    if(window.confirm(`Delete ${person.name}?`)) {
+      await routes.deletePerson(person.id).then( () => {
+        setMessage({ type: "confirmation", text: `Removed ${person.name} successfully!` })
+        setTimeout(() => {
+          setMessage({type : "none", text : ""});
+        }, 5000);
+      });
+    } 
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let newArr = [...persons];
-    newArr.push({ name: newName, phoneNumber : newNumber });
-    
-    if(persons.some(person => person.name.toLowerCase().trim() === newName.toLowerCase().trim())) {
-      alert(`${newName} is already added to phonebook`);
+
+    let newId = 1;
+    for(let i = 0; i < persons.length; i++) {
+        if(newId <= persons[i].id) {
+          newId = persons[i].id + 1;
+        }
+    };
+
+    let newPerson = { name: newName, number : newNumber, id : newId };
+    let comparedPerson;
+    if(persons.some(person => { 
+      comparedPerson = person;
+      return person.name.toLowerCase().trim() === newName.toLowerCase().trim(); 
+    })) {
+      console.log(comparedPerson);
+      if(comparedPerson.number !== newPerson.number) {
+        if(window.confirm(`${newPerson.name} has already been added to the registery, replace the old number with a new one?`)) {
+          newPerson.id = comparedPerson.id;
+          await routes.updatePerson(comparedPerson.id, newPerson).then( () => {
+            setMessage({ type: "confirmation", text : `Changed phone number on ${newPerson.name}`});
+            setTimeout(() => {
+              setMessage({type: "none", text: ""});
+            }, 5000);
+          });
+        }
+      } else {
+        alert(`${newName} is already added to phonebook`);
+      }
     } else {
-      setPersons(newArr);
+      await routes.addPerson(newPerson).then( () => {
+        setMessage({type : "confirmation", text : `Added ${newPerson.name} succesfully!`})
+        setTimeout(() => {
+          setMessage({type : "none", text : ""});
+        }, 5000);
+      });
     }
-  }
+  };
 
   const handleSearchName = (e) => {
     e.preventDefault();
     setSearchName(e.target.value);
-  }
+  };
   
  
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationMessage msg={message} />
       <Filter filter={handleSearchName}/>
       <h2>Add a new</h2>
       <AddNewPerson addnewperson={handleSubmit} name={handleNameChange} number={handlePhoneNumberChange}/>
       <h2>Numbers</h2>
-      <Persons persons={persons} searchName ={searchName}/>
+      <Persons persons={persons} searchName ={searchName} handleDelete={handleDelete} />
     </div>
   )
 
