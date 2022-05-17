@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect( () => {
     const fetchPersons = async () => {
-      let newPersons = await routes.getPersons();
+      let newPersons = await routes.getPersons().catch(console.error);
       setPersons(newPersons);
     }
     fetchPersons();
@@ -37,7 +37,7 @@ const App = () => {
         setTimeout(() => {
           setMessage({type : "none", text : ""});
         }, 5000);
-      });
+      }).catch(console.error);
     } 
   };
 
@@ -66,6 +66,11 @@ const App = () => {
             setTimeout(() => {
               setMessage({type: "none", text: ""});
             }, 5000);
+          }).catch(error => {
+            if(error.response.status === 404) {
+              setMessage({ type : "error", text : `${newPerson.name} has already been removed!`})
+            }
+            console.log(error.response.status);
           });
         }
       } else {
@@ -77,6 +82,8 @@ const App = () => {
         setTimeout(() => {
           setMessage({type : "none", text : ""});
         }, 5000);
+      }).catch(error => {
+        console.log(error);
       });
     }
   };
