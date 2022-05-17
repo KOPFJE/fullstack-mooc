@@ -1,8 +1,9 @@
 import axios from 'axios';
-const serverURI = 'http://localhost:3001/persons';
+const serverURI = 'http://localhost:3001/api/persons';
 
 const getPersons = async () => {
     const res = await axios.get(serverURI).then(response => response.data);
+    console.log(res);
     return res;
 };
 
