@@ -4,13 +4,13 @@ const calculateExercise = (hours:Array<number>, target:number) => {
     let average = sum/hours.length;
     
     let rating =  Math.floor(average / target);
-    if (rating > 3) rating = 3;
     let ratingDescriptions = [
         "Not good enough, failed.",
         "Acceptable, but you can do better!",
-        "Good, but you have still to improve!",
+        "Good, but you have still room to improve!",
         "Great! Well done!"
     ];
+    if (rating > ratingDescriptions.length) rating = ratingDescriptions.length;
 
     return {
         periodLength : hours.length,
