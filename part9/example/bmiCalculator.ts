@@ -43,13 +43,21 @@ const calculateBmi = (cm: number, kg: number): string => {
     return `${bmi.toFixed(2)} - Obese (Class III)`;
 };
 
-if (process.argv.length<4) {
-    console.log('Give weight as kg and height as cm in that order.')
-    process.exit(1)
-  }
+export { calculateBmi };
 
-  const weight = parseFloat(process.argv[2]);
-  const height = parseFloat(process.argv[3]);
+const startCalculator = () => {
+    if(process.argv.length > 0) {
+        if (process.argv.length<4) {
+            console.log('Give weight as kg and height as cm in that order.')
+            return;
+        }
 
-  console.log(`${weight}kg - ${height}cm`);
-  console.log(calculateBmi(height, weight));
+        const weight = parseFloat(process.argv[2]);
+        const height = parseFloat(process.argv[3]);
+
+        console.log(`${weight}kg - ${height}cm`);
+        console.log(calculateBmi(height, weight));
+    }
+};
+
+startCalculator();
