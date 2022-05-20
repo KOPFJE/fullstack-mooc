@@ -1,4 +1,14 @@
-const calculateExercise = (hours:Array<number>, target:number) => {
+interface ExerciseResult {
+    periodLength?: number;
+    trainingDays?: number,
+    success?: boolean,
+    rating?: number,
+    ratingDescription?: string,
+    target?: number,
+    average?: number
+}
+
+const calculateExercise = (hours:Array<number>, target:number): ExerciseResult => {
     let sum = 0;
     hours.map(day => sum += day);
     let average = sum/hours.length;
@@ -14,7 +24,7 @@ const calculateExercise = (hours:Array<number>, target:number) => {
 
     return {
         periodLength : hours.length,
-        trainingDays : hours.filter(num => num > 0),
+        trainingDays : hours.filter(num => num > 0).length,
         success : (rating > 0),
         rating : rating,
         ratingDescription : ratingDescriptions[rating],
