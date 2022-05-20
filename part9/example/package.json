@@ -19,6 +19,7 @@
   "scripts": {
     "ts-node": "ts-node",
     "calculateBmi": "ts-node bmiCalculator.ts",
+    "calculateExercise" : "ts-node exerciseCalculator.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lauri Niskanen, Annika Sneck, Akseli Jaara",
