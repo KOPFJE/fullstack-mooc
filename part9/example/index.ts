@@ -9,7 +9,12 @@ app.get('/hello', (_req, res) => {
     res.send('Hello Full Stack!');
 });
 app.get('/bmi', (req, res) => {
-    if(typeof req.query.height !== "string" || typeof req.query.weight !== "string") throw console.error;
+    if(typeof req.query.height !== "string" || typeof req.query.weight !== "string") 
+        res.send( 
+            {
+                error : "Malformatted parameters!"
+            }
+        );
     const height = parseFloat(req.query.height);
     const weight = parseFloat(req.query.weight);
     let bmi = calculateBmi(height, weight);
