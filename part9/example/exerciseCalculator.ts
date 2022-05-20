@@ -2,6 +2,7 @@ const calculateExercise = (hours:Array<number>, target:number) => {
     let sum = 0;
     hours.map(day => sum += day);
     let average = sum/hours.length;
+    
     let rating =  Math.floor(average / target);
     if (rating > 3) rating = 3;
     let ratingDescriptions = [
