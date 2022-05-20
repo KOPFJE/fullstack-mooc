@@ -11,10 +11,10 @@ interface ExerciseResult {
 const calculateExercise = (hours:Array<number>, target:number): ExerciseResult => {
     let sum = 0;
     hours.map(day => sum += day);
-    let average = sum/hours.length;
+    const average = sum/hours.length;
     
     let rating =  Math.floor(average / target);
-    let ratingDescriptions = [
+    const ratingDescriptions = [
         "Not good enough, failed.",
         "Acceptable, but you can do better!",
         "Good, but you have still room to improve!",
@@ -33,17 +33,22 @@ const calculateExercise = (hours:Array<number>, target:number): ExerciseResult =
     };
 };
 
-if (process.argv.length<10) {
-    console.log('Give the target daily hours and amount of exercised per day for n amount of days.');
-    process.exit(1);
-  };
+export { calculateExercise };
 
-const hours = [];
-const target = parseFloat(process.argv[2]);
+const startCalculator = () => {
+    if (process.argv.length<10) {
+        console.log('Give the target daily hours and amount of exercised per day for n amount of days.');
+        return;
+    }
 
-for(let i = 3; i < process.argv.length; i++) {
-    hours.push(parseFloat(process.argv[i]));
-}
+    const hours = [];
+    const target = parseFloat(process.argv[2]);
 
-console.log(calculateExercise(hours, target));
+    for(let i = 3; i < process.argv.length; i++) {
+        hours.push(parseFloat(process.argv[i]));
+    }
 
+    console.log(calculateExercise(hours, target));
+};
+
+startCalculator();

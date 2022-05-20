@@ -35,7 +35,7 @@ const calculateBmi = (cm: number, kg: number): string => {
             category : "Obese (Class III)"
         }
     ];
-    for(let calc of bmiValues) {   
+    for(const calc of bmiValues) {   
         if(bmi < calc.value) {
             return `${bmi.toFixed(2)} - ${calc.category}`;
         }
@@ -48,7 +48,7 @@ export { calculateBmi };
 const startCalculator = () => {
     if(process.argv.length > 0) {
         if (process.argv.length<4) {
-            console.log('Give weight as kg and height as cm in that order.')
+            console.log('Give weight as kg and height as cm in that order.');
             return;
         }
 
