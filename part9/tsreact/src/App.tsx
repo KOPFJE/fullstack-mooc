@@ -100,19 +100,15 @@ const Content = (props: CoursesProps): JSX.Element => {
   props.courses.forEach(course => {
     switch(course.type) {
       case "normal":
-        console.log(`Normal: ${course.name}`);
         formatedCourses.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br /><em>{course.desc}</em></p>);
         break;
       case "submission":
-        console.log(`Submission: ${course.name}`);
         formatedCourses.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br /><em>{course.desc}</em><br />Submit to: {course.submitLink}</p>);
         break;
       case "groupProject":
-        console.log(`GroupProject: ${course.name}`);
         formatedCourses.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br />Project exercises: {course.groupProjectCount}</p>);
         break;
       case "special":
-        console.log(`Special: ${course.name}`);
         formatedCourses.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br /><em>{course.desc}</em><br />Required skills: { course.requirements.join(", ") }</p>);
         break;
       default:
