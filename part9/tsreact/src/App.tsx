@@ -113,7 +113,7 @@ const Content = (props: CoursesProps): JSX.Element => {
         break;
       case "special":
         console.log(`Special: ${course.name}`);
-        html.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br />Required skills: { course.requirements.join(", ") }</p>);
+        html.push(<p key={course.name}><strong>{course.name} {course.exerciseCount}</strong><br /><em>{course.desc}</em><br />Required skills: { course.requirements.join(", ") }</p>);
         break;
       default:
         return assertNever(course);
