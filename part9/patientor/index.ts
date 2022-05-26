@@ -21,4 +21,4 @@ app.use('/api/diagnoses', diagnosisRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
-});
+}); 

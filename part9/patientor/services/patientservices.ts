@@ -1,16 +1,20 @@
 import patients from '../data/patients.json';
-import { PatientEntryNonSensitivite, PatientEntry, Gender } from '../types'
+import { PatientEntryPublic, PatientEntry, Gender, Entry } from '../types'
 import { toNewPatientEntry } from '../utils';
 
-const getPatients : Array<PatientEntry> = patients.map(obj => {
+const patientsArr : Array<PatientEntry> = patients.map(obj => {
     const object = toNewPatientEntry(obj) as PatientEntry;
     object.id = obj.id;
     return object;
 });
 
-const getPatientsNonSensitivite = (): PatientEntryNonSensitivite[] => {
+const getPatients = ():PatientEntry[] => {
+    return patientsArr;
+}
 
-    return getPatients.map((
+const getPatientsPublic = (): PatientEntryPublic[] => {
+
+    return patientsArr.map((
             { id, name, dateOfBirth, gender, occupation } : 
             {id:string, name:string, dateOfBirth:string, gender:Gender, occupation:string}
         ) => ({
@@ -23,21 +27,22 @@ const getPatientsNonSensitivite = (): PatientEntryNonSensitivite[] => {
     ));
 };
 
-const addPatient = (id:string, name:string, dateOfBirth:string, ssn:string, gender: Gender, occupation:string):PatientEntry => {
+const addPatient = (id:string, name:string, dateOfBirth:string, ssn:string, gender: Gender, occupation:string, entries: Entry[]):PatientEntry => {
     const newPatientEntry = {
         id: id,
         name: name,
         dateOfBirth: dateOfBirth,
         ssn: ssn,
         gender: gender,
-        occupation: occupation
+        occupation: occupation,
+        entries: entries
     };
-    patients.push(newPatientEntry);
+    patientsArr.push(newPatientEntry);
     return newPatientEntry;
 };
 
 export default {
     getPatients,
-    getPatientsNonSensitivite,
+    getPatientsPublic,
     addPatient
 };

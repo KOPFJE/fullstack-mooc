@@ -1,6 +1,6 @@
-import { PatientEntry, DiagnosisEntry, Gender } from './types';
+import { PatientEntry, DiagnosisEntry, Gender, Entry } from './types';
 
-type PatientFields = { id: unknown, name: unknown, ssn: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown };
+type PatientFields = { id: unknown, name: unknown, ssn: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: Entry[] };
 type DiagnosisFields = { code: unknown, name: unknown, latin: unknown };
 
 const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender } : PatientFields): PatientEntry => {
@@ -10,7 +10,8 @@ const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender } : 
     ssn: parseSSN(ssn),
     dateOfBirth: parseId(dateOfBirth),
     occupation: parseOccupation(occupation),
-    gender: parseGender(gender)
+    gender: parseGender(gender),
+    entries: []
   };
   return newEntry;
 };
