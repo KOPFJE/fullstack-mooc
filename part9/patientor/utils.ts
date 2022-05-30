@@ -35,13 +35,24 @@ const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);    
 }
 
-const isEntry = (param: any): param is Entry[] => {
-    if(param === []) return true;
+const isEntry = (param: any): param is Entry => {
+    if(!param) return false;
+    if(!param.diagnosis) return false;
+    return true;
+}
+
+const isEntries = (param: any): param is Entry[] => {
+    if(Array.isArray(param)) {
+        if(param.length == 0) return true;
+        for(let elem of param) {
+            if(!isEntry(elem)) return false;           
+        }
+    }
     return false;
 }
 
 const parseEntries = (entries: any): Entry[] => {
-    if(!entries || !isEntry(entries)) {
+    if(!entries || !isEntries(entries)) {
         throw new Error('Incorrect or missing entries');
     }
     return entries;

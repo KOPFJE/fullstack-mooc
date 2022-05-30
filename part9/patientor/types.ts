@@ -4,9 +4,8 @@ export enum Gender {
     Other = 'other',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Entry {
-
+    diagnosis: DiagnosisEntry;
 }
 
 export interface PatientEntry {
