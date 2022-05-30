@@ -1,9 +1,9 @@
 import { PatientEntry, DiagnosisEntry, Gender, Entry } from './types';
 
-type PatientFields = { id: unknown, name: unknown, ssn: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: Entry[] };
+type PatientFields = { id: unknown, name: unknown, ssn: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: unknown };
 type DiagnosisFields = { code: unknown, name: unknown, latin: unknown };
 
-const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender } : PatientFields): PatientEntry => {
+const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender, entries} : PatientFields): PatientEntry => {
   const newEntry: PatientEntry = {
     id: parseId(id),
     name: parseName(name),
@@ -11,7 +11,7 @@ const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender } : 
     dateOfBirth: parseId(dateOfBirth),
     occupation: parseOccupation(occupation),
     gender: parseGender(gender),
-    entries: []
+    entries: parseEntries(entries)
   };
   return newEntry;
 };
@@ -33,6 +33,18 @@ const isString = (str: unknown): str is string => {
 
 const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);    
+}
+
+const isEntry = (param: any): param is Entry[] => {
+    if(param === []) return true;
+    return false;
+}
+
+const parseEntries = (entries: any): Entry[] => {
+    if(!entries || !isEntry(entries)) {
+        throw new Error('Incorrect or missing entries');
+    }
+    return entries;
 }
 
 const parseCode = (code: any): string => {
