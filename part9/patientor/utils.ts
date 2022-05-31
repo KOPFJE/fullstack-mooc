@@ -1,6 +1,6 @@
 import { PatientEntry, DiagnosisEntry, Gender, Entry } from './types';
 
-type PatientFields = { id: unknown, name: unknown, ssn: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: unknown };
+type PatientFields = { id: unknown, name: unknown, ssn?: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: unknown };
 type DiagnosisFields = { code: unknown, name: unknown, latin: unknown };
 
 const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender, entries} : PatientFields): PatientEntry => {
@@ -35,20 +35,9 @@ const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);    
 }
 
-const isEntry = (param: any): param is Entry => {
-    if(!param) return false;
-    if(!param.diagnosis) return false;
-    return true;
-}
-
-const isEntries = (param: any): param is Entry[] => {
-    if(Array.isArray(param)) {
-        if(param.length == 0) return true;
-        for(let elem of param) {
-            if(!isEntry(elem)) return false;           
-        }
-    }
-    return false;
+const isEntries = (param: any):Entry[] => {
+    if(!Array.isArray(param)) {throw new Error('Incorrect value, not an array');}
+    return param as Array<Entry>;
 }
 
 const parseEntries = (entries: any): Entry[] => {
