@@ -1,15 +1,15 @@
-import { PatientEntry, DiagnosisEntry, Gender, Entry } from './types';
+import { PatientEntry, DiagnosisEntry, Gender, NewEntry, Entry } from './types';
 
 type PatientFields = { id: unknown, name: unknown, ssn?: unknown, dateOfBirth: unknown, occupation: unknown, gender: unknown, entries: unknown };
 type DiagnosisFields = { code: unknown, name: unknown, latin: unknown };
 
 const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender, entries} : PatientFields): PatientEntry => {
   const newEntry: PatientEntry = {
-    id: parseId(id),
-    name: parseName(name),
-    ssn: parseSSN(ssn),
-    dateOfBirth: parseId(dateOfBirth),
-    occupation: parseOccupation(occupation),
+    id: parseString(id),
+    name: parseString(name),
+    ssn: parseStringUndefined(ssn),
+    dateOfBirth: parseString(dateOfBirth),
+    occupation: parseString(occupation),
     gender: parseGender(gender),
     entries: parseEntries(entries)
   };
@@ -18,14 +18,53 @@ const toNewPatientEntry = ({ id, name, ssn, dateOfBirth, occupation, gender, ent
 
 const toNewDiagnosisEntry = ({code, name, latin} : DiagnosisFields): DiagnosisEntry => {
     const newEntry: DiagnosisEntry = {
-        code: parseCode(code),
-        name: parseName(name),
-        latin: parseLatin(latin)
+        code: parseString(code),
+        name: parseString(name),
+        latin: parseString(latin)
     };
     return newEntry;
   };
 
-export {toNewPatientEntry, toNewDiagnosisEntry };
+  const toNewEntry = ({...entry}):NewEntry  => {
+    if(!entry.type) throw new Error("Not an entry!");
+    let newEntry = null as unknown as NewEntry;
+    switch(entry.type) {
+        case "Hospital":
+            newEntry = {
+                description : entry.description,
+                date : entry.date,
+                specialist : entry.specialist,
+                diagnosisCodes : entry.diagnosisCodes,
+                type : entry.type,
+                discharge : entry.discharge
+            }
+            break;
+        case "HealthCheck":
+            newEntry = {
+                description : entry.description,
+                date : entry.date,
+                specialist : entry.specialist,
+                diagnosisCodes : entry.diagnosisCodes,
+                type : entry.type,
+                healthCheckRating : entry.healthCheckRating
+            }
+            break;
+        case "OccupationalHealthcare":
+            newEntry = {
+                description : entry.description,
+                date : entry.date,
+                specialist : entry.specialist,
+                diagnosisCodes : entry.diagnosisCodes,
+                type : entry.type,
+                employerName : entry.employerName,
+                sickLeave : entry.sickLeave
+            }
+            break;
+    }
+    return newEntry as NewEntry;
+  }
+
+export {toNewPatientEntry, toNewDiagnosisEntry, toNewEntry };
 
 const isString = (str: unknown): str is string => {
     return typeof str === 'string' || str instanceof String;
@@ -36,9 +75,10 @@ const isGender = (param: any): param is Gender => {
 }
 
 const isEntries = (param: any):Entry[] => {
-    if(!Array.isArray(param)) {throw new Error('Incorrect value, not an array');}
+    if(!Array.isArray(param)) throw new Error('Incorrect value, not an array');
     return param as Array<Entry>;
 }
+
 
 const parseEntries = (entries: any): Entry[] => {
     if(!entries || !isEntries(entries)) {
@@ -47,25 +87,13 @@ const parseEntries = (entries: any): Entry[] => {
     return entries;
 }
 
-const parseCode = (code: any): string => {
-    if(!code || !isString(code)) {
-        throw new Error('Incorrect or missing code');
+const parseString = (str: any): string => {
+    if(!str || !isString(str)) {
+        throw new Error(`Given variable is not a string! Var: ${str}`);
     }
-    return code;
-}
-const parseName = (name: any): string => {
-    if(!name || !isString(name)) {
-        throw new Error('Incorrect or missing name');
-    }
-    return name;
+    return str;
 }
 
-const parseLatin = (latin: any): string => {
-    if(!latin || !isString(latin)) {
-        throw new Error('Incorrect or missing latin');
-    }
-    return latin;
-}
 const parseGender = (gender: unknown): Gender => {
     if(!gender || !isGender(gender)) {
         throw new Error('Incorrect or missing gender');
@@ -73,24 +101,10 @@ const parseGender = (gender: unknown): Gender => {
     return gender;
 }
 
-const parseOccupation = (occupation: any): string => {
-    if(!occupation || !isString(occupation)) {
-        throw new Error('Incorrect or missing occupation');
+const parseStringUndefined = (str: any): string | undefined => {
+    if(!str || !isString(str)) {
+        throw new Error(`Given variable is not a string! Var: ${str}`);
     }
-    return occupation;
-}
-
-const parseId = (id: any): string => {
-    if(!id || !isString(id)) {
-        throw new Error('Incorrect or missing id');
-    }
-    return id;
-}
-
-const parseSSN = (ssn: any): string | undefined => {
-    if(!ssn || !isString(ssn)) {
-        throw new Error('Incorrect or missing ssn');
-    }
-    return ssn;
+    return str;
 }
 

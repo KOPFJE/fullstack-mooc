@@ -1,8 +1,8 @@
 import patientService from '../services/patientservices';
 import express from 'express';
 import {v1 as uuid} from 'uuid';
-import { toNewPatientEntry } from '../utils';
-import { PatientEntry, PatientEntryPublic } from '../types';
+import { toNewPatientEntry, toNewEntry } from '../utils';
+import { Entry, PatientEntry, PatientEntryPublic } from '../types';
 
 const router = express.Router();
 const id = uuid();
@@ -23,7 +23,26 @@ router.get('/:id', (req, res) => {
     } catch (error: unknown) {
         let errorMsg = 'Something went wrong. ';
         if(error instanceof Error) {
-            errorMsg += 'Error ' + error.message;
+            errorMsg += `Error ${error.message}`;
+        }
+        res.status(404).send(errorMsg);
+    }
+});
+
+router.post('/:id/entries', (req, res) => {
+    const paramId : string = req.params.id;
+    try {
+        const patient = patients.find(patient => patient.id === paramId);
+        if(!patient) throw new Error("No patient found!");
+        const newEntry = req.body;
+        const formatedEntry = toNewEntry(newEntry);
+        (formatedEntry as Entry).id = id;
+        patient.entries.push(formatedEntry as Entry);
+        res.status(200).send(formatedEntry);
+    } catch(error: unknown) {
+        let errorMsg = 'Something went wrong. '
+        if(error instanceof Error) {
+            errorMsg += `Error ${error.message}`;
         }
         res.status(404).send(errorMsg);
     }
