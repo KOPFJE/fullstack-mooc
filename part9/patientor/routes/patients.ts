@@ -1,11 +1,10 @@
 import patientService from '../services/patientservices';
 import express from 'express';
-import {v1 as uuid} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import { toNewPatientEntry, toNewEntry } from '../utils';
 import { Entry, PatientEntry, PatientEntryPublic } from '../types';
 
 const router = express.Router();
-const id = uuid();
 
 const patientsNS : PatientEntryPublic[] = patientService.getPatientsPublic();
 const patients : PatientEntry[] = patientService.getPatients();
@@ -32,6 +31,7 @@ router.get('/:id', (req, res) => {
 router.post('/:id/entries', (req, res) => {
     const paramId : string = req.params.id;
     try {
+        const id = uuid();
         const patient = patients.find(patient => patient.id === paramId);
         if(!patient) throw new Error("No patient found!");
         const newEntry = req.body;
@@ -50,6 +50,7 @@ router.post('/:id/entries', (req, res) => {
 
 router.post('/', (req, res) => {
     try {
+        const id = uuid();
         const newPatientEntry = req.body;
         newPatientEntry.id = id;
         newPatientEntry.entries = [];

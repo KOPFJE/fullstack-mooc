@@ -28,13 +28,14 @@ const toNewDiagnosisEntry = ({code, name, latin} : DiagnosisFields): DiagnosisEn
   const toNewEntry = ({...entry}):NewEntry  => {
     if(!entry.type) throw new Error("Not an entry!");
     let newEntry = null as unknown as NewEntry;
+    console.log(entry.diagnosisCodes);
     switch(entry.type) {
         case "Hospital":
             newEntry = {
                 description : entry.description,
                 date : entry.date,
                 specialist : entry.specialist,
-                diagnosisCodes : entry.diagnosisCodes,
+                diagnosisCodes: entry.diagnosisCodes,
                 type : entry.type,
                 discharge : entry.discharge
             }
@@ -60,6 +61,8 @@ const toNewDiagnosisEntry = ({code, name, latin} : DiagnosisFields): DiagnosisEn
                 sickLeave : entry.sickLeave
             }
             break;
+        default:
+            throw new Error("Not a valid entry.");
     }
     return newEntry as NewEntry;
   }
