@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import reducer from './reducers/anecdoteReducer'
+import reducer, { actionCreator } from './reducers/anecdoteReducer'
 
 const App = () => {
   const anecdotes = useSelector(state => state);
@@ -12,14 +12,14 @@ const App = () => {
   
   const vote = (id) => {
     console.log('vote', id)
-    dispatch({type: 'VOTE', data: {id}});
+    dispatch(actionCreator("VOTE", {id}));
   }
 
   const add = (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    dispatch({type: 'ADD', data: {content, votes : 0}})
+    dispatch(actionCreator("ADD", {content, votes : 0}))
   }
 
   return (
