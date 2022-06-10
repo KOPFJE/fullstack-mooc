@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import reducer, { actionCreator } from '../reducers/anecdoteReducer'
 
 const Anecdotes = () => {
-    const anecdotes = useSelector(state => state);
+    const anecdotes = useSelector(state => state.anecdoteReducer);
     const dispatch = useDispatch(reducer);
     console.log(anecdotes)
 
@@ -13,7 +13,7 @@ const Anecdotes = () => {
 
     return(
         <div>
-            {anecdotes.anecdoteReducer.map(anecdote =>
+            {anecdotes.map(anecdote =>
             <div key={anecdote.id}>
                 <div>
                     {anecdote.content}
