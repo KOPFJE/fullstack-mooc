@@ -4,6 +4,7 @@ import reducer, { actionCreator } from '../reducers/anecdoteReducer'
 const Anecdotes = () => {
     const anecdotes = useSelector(state => state);
     const dispatch = useDispatch(reducer);
+    console.log(anecdotes)
 
     const vote = (id) => {
         console.log('vote', id)
@@ -12,7 +13,7 @@ const Anecdotes = () => {
 
     return(
         <div>
-            {anecdotes.map(anecdote =>
+            {anecdotes.anecdoteReducer.map(anecdote =>
             <div key={anecdote.id}>
                 <div>
                     {anecdote.content}
