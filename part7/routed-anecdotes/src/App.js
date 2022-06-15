@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -6,9 +7,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
+      <a href='/' style={padding}>anecdotes</a>
+      <a href='/create' style={padding}>create new</a>
+      <a href='/about' style={padding}>about</a>
     </div>
   )
 }
@@ -17,10 +18,21 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} >
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>)}
     </ul>
   </div>
 )
+
+const Notification = ({text}) => {
+  if(text === "") return null
+  return(
+    <p>
+      {text}
+    </p>  
+  )
+}
 
 const About = () => (
   <div>
@@ -48,7 +60,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -58,6 +70,8 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.notify(`A new anecdote "${content}" created!`)
+    navigate('/')
   }
 
   return (
@@ -83,6 +97,17 @@ const CreateNew = (props) => {
 
 }
 
+const Anecdote = (props) => {
+  const anecdote = props.anecdote
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <p><strong>Author:</strong> {anecdote.author}, <strong>Votes:</strong> {anecdote.votes}, <a href={anecdote.info}>more info...</a></p>
+      <p><Link to={"/"}>Back to anecdotes</Link></p>
+    </div>
+  )
+}
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -101,11 +126,16 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState("")
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+  }
+
+  const notify = (notificationText) => {
+    setNotification(notificationText)
+    setTimeout(setNotification, 5000, "")
   }
 
   const anecdoteById = (id) =>
@@ -122,13 +152,23 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+
+  const match = useMatch('/anecdotes/:id')  
+  const anecdote = match     
+    ? anecdotes.find(anecdote => anecdote.id === Number(match.params.id))    
+    : null
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
+      <Notification text={notification}/>
+      <Routes>
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
+      </Routes>
       <Footer />
     </div>
   )
